@@ -29,18 +29,33 @@ int main (){
 	for (list<int>::iterator it = lista.begin(); it != lista.end(); it++){
 		cout << *it << " ";
 	}
+	cout << endl;
 	BinarySearchTreeOfInteger clone = tree.clone();
 	lista = tree.positionsPre();
 	for (list<int>::iterator it = lista.begin(); it != lista.end(); it++){
 		cout << *it << " ";
 	}
+	cout << endl;
  	lista = tree.positionsPos();
 	for (list<int>::iterator it = lista.begin(); it != lista.end(); it++){
 		cout << *it << " ";
 	}
+	cout << endl;
 	tree.clear();
-	/**
-	 * Adicionar na tree numeros que gerem as 4 rotacoes previstas, boa sorte!!!!!!!!!
-	*/
+	
+
+	tree.add(110);
+	tree.add(120);
+	tree.add(150);//rotaçao esquerda
+	tree.add(130);
+	tree.add(200);
+	tree.add(100);
+	tree.add(80);//rotaçao direita
+	tree.add(70);
+	tree.add(75);//rotaçao dupla direita
+	tree.add(250);
+	tree.add(230);//rotaçao dupla esquerda
+
+
 	return 0;
 }

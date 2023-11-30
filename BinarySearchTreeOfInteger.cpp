@@ -163,17 +163,17 @@ void BinarySearchTreeOfInteger::balance(NodoAB *nodo) {
     }
 
     if (balanceValue(nodo) == -2) {
-        cout<<"Balanco = -2"<<endl;
+        // cout<<"Balanco = -2"<<endl;
         if (balanceValue(nodo->left) == 1) {
             rotateLeft(nodo->left);
         }
         rotateRight(nodo);
     }
     else if (balanceValue(nodo) == 2) {
-        cout<<"Balanco = 2"<<endl;
+        // cout<<"Balanco = 2"<<endl;
          if (balanceValue(nodo->right) == -1) {
             rotateRight(nodo->right);
-            cout << nodo->element << endl;
+            // cout << nodo->element << endl;
         }
         rotateLeft(nodo);
     }
@@ -299,6 +299,7 @@ NodoAB *BinarySearchTreeOfInteger::getParent(int element) {
 
 void BinarySearchTreeOfInteger::clear() {
     clear(root);
+    root = NULL;
 }
 
 void BinarySearchTreeOfInteger::clear(NodoAB *nodo) {
