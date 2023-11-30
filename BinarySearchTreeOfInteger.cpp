@@ -189,6 +189,7 @@ int BinarySearchTreeOfInteger::balanceValue(NodoAB *nodo){
 
 BinarySearchTreeOfInteger::~BinarySearchTreeOfInteger(){
     clear();
+    count = 0;
 }
 
 BinarySearchTreeOfInteger BinarySearchTreeOfInteger::clone() {
