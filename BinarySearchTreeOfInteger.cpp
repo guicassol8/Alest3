@@ -202,18 +202,18 @@ BinarySearchTreeOfInteger BinarySearchTreeOfInteger::clone() {
 
 list<int> BinarySearchTreeOfInteger::positionsPre() {
     list <int> l;
-    positionsPre(root, l);
+    positionsPreAux(root, l);
     return l;
 }
 
-list<int> BinarySearchTreeOfInteger::positionsPre(NodoAB *nodo, list<int> &l) {
+void BinarySearchTreeOfInteger::positionsPreAux(NodoAB *nodo, list<int> &l) {
     if (nodo == NULL) {
-        return l;
+        return;
     }
     l.push_back(nodo->element);
-    positionsPre(nodo->left, l);
-    positionsPre(nodo->right, l);
-    return l;
+    positionsPreAux(nodo->left, l);
+    positionsPreAux(nodo->right, l);
+    return;
 }
 
 
@@ -311,4 +311,34 @@ void BinarySearchTreeOfInteger::clear(NodoAB *nodo) {
         clear(nodo->right);
     }
     delete nodo;
+}
+
+list <int> BinarySearchTreeOfInteger::positionsCentral() {
+    list <int> l;
+    positionsCentralAux(root, l);
+    return l;
+}
+
+void BinarySearchTreeOfInteger::positionsCentralAux(NodoAB *n, list<int> &l) {
+    if (n == NULL) {
+        return;
+    }
+    positionsCentralAux(n->left, l);
+    l.push_back(n->element);
+    positionsCentralAux(n->right, l);
+}
+
+list <int> BinarySearchTreeOfInteger::positionsPos() {
+    list <int> l;
+    positionsPosAux(root, l);
+    return l;
+}
+
+void BinarySearchTreeOfInteger::positionsPosAux(NodoAB *n, list<int> &l) {
+    if (n == NULL) {
+        return;
+    }
+    positionsPosAux(n->left, l);
+    positionsPosAux(n->right, l);
+    l.push_back(n->element);
 }

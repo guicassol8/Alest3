@@ -18,7 +18,9 @@ private:
   void rotateLeft(NodoAB *desbalanceado);
   int balanceValue(NodoAB *nodo);
   void rotateRight(NodoAB *desbalanceado);
-  list<int> positionsPre(NodoAB *n, list <int> &l);
+  void positionsPreAux(NodoAB *n, list <int> &l);
+  void positionsCentralAux(NodoAB *n, list <int> &l);
+  void positionsPosAux(NodoAB *n, list <int> &l);
   void balance(NodoAB *nodo);
   int height(NodoAB *n);
   int height(NodoAB *n, int h);
@@ -38,7 +40,7 @@ public:
     int height();
     BinarySearchTreeOfInteger clone();
     list<int> positionsPre();
-    list<int> positionsCentral(); // implementar
-    list<int> positionsPos(); // implementar
+    list<int> positionsCentral();
+    list<int> positionsPos();
 };
 #endif

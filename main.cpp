@@ -25,5 +25,9 @@ int main (){
 	// tree.add(90);
 	tree.print();
 	cout << tree.getParent(130)->element << endl;
+	list <int> lista = tree.positionsPos();
+	for (list<int>::iterator it = lista.begin(); it != lista.end(); it++){
+		cout << *it << " ";
+	}
 	return 0;
 }
