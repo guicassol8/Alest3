@@ -1,7 +1,6 @@
 import nltk
 import unicodedata
-from nltk.corpus import mac_morpho
-
+from nltk.corpus import words
 
 def rem(texto):
     # Normaliza o texto e remove os acentos
@@ -11,12 +10,14 @@ def rem(texto):
     )
 
 # Carregue a lista de palavras
-word_list = mac_morpho.words()
+word_list = words.words()
 
 # Filtrar palavras com até 5 letras
-short_words = [rem(word) for word in word_list if len(word) == 5 and word.isalpha()]
+short_words = [word for word in word_list if len(word) == 5 and word.isalpha() and not word[0].isupper()]
 
 word_list = list(set(word_list))
+
+word_list.sort()
 
 # Exibir as palavras
 print(short_words)
