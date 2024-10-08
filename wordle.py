@@ -13,12 +13,12 @@ short_words = [word.strip() for word in word_list if len(word) == 5 and word.isa
 
 word_list = list(set(short_words))
 for word in open("adicao.txt"):
-    word_list.append(word)
+    word_list.append(word.strip())
 
 
 listaOriginal = word_list.copy()
 
-os.system("clear")
+os.system("cls")
 
 valorLetras = dict()
 # Quantidade de repeticao de letras
@@ -60,7 +60,7 @@ def melhorChute():
                 melhorPalavra = False
                 break
         if melhorPalavra:
-            return palavra    
+            return palavra
 
 word_list.sort()
 word_list = sorted(word_list, key=valorPalavra)
@@ -83,6 +83,14 @@ firstGuess = "arose"
 # Lista de possíveis palavras
 possiveisPalavras = []
 
+def dicionarioRepeticaoQuatro():
+    for word in word_list:
+        for letter in word:
+            if letter not in valorLetras:
+                valorLetras[letter] = 0
+            if letter not in letraCorreta and letter not in posicaoCorreta.values():
+            	valorLetras[letter] += 1
+
 # - (#) Nao tem
 # - ($) Posicao errada
 # - (@) Posicao certa
@@ -101,10 +109,27 @@ def parseLinha(linha):
 			aliNao[(i+1)//2].append(linha[i+1])
    
 		if linha[i] == "@":
-			posicaoCorreta[linha[i+1]] = (i+1)//2
+			posicaoCorreta[(i+1)//2] = linha[i+1]
 			if linha[i+1] not in quantLetra:
 				quantLetra[linha[i+1]] = 0
-			quantLetra[linha[i+1]] += 1	
+			quantLetra[linha[i+1]] += 1
+               
+	for letra in quantLetra:
+		if letra in letraCorreta:
+			if quantLetra[letra] <= letraCorreta[letra]:
+				continue
+		letraCorreta[letra] = quantLetra[letra]
+          
+	for i in range(0, len(linha), 2):
+		if linha[i]	== "#":
+			if linha[i+1] not in letraCorreta:
+				letraCorreta[linha[i+1]] = 0
+				quantAbsoluta.add(linha[i+1])
+			elif letraCorreta[linha[i+1]] != 0:
+				if (i+1)//2 not in aliNao:
+					aliNao[(i+1)//2] = []
+				aliNao[(i+1)//2].append(linha[i+1])
+				quantAbsoluta.add(linha[i+1])
 
 def checarPalavra(palavra):
     for index in posicaoCorreta:
@@ -146,6 +171,30 @@ def checarPalavra(palavra):
             return False
     return True
 
+def printInfos():
+	print("Posicoes Corretas:")
+	for index in posicaoCorreta:
+		print(f"Index: {index} / Palavra: {posicaoCorreta[index]}")
+	print("Numero de Letras:")
+	for letra in letraCorreta:
+		print(f"Letra: {letra} / Quantidade: {letraCorreta[letra]}")
+	print("Ali nao ta:")
+	for index in aliNao:
+		print(f"Index: {index} ", end="")
+		for letra in aliNao[index]:
+			print(f"Letra: {letra}",end="")
+		print("")
+	print("Quant Absoluta:")
+	for letra in quantAbsoluta:
+		print(f"Letra: {letra}")
+          
+def chuteQuatro():
+    global listaOriginal
+    valorLetras.clear()
+    dicionarioRepeticaoQuatro()
+    listaOriginal = sorted(listaOriginal, key=valorPalavra)
+    if listaOriginal:
+        print(f"Chute Quatro: {listaOriginal[0]}")
 
 while True:
     escolha = input("1 - AddPosCorreta 2 - AddLetraCorreta 3 - Testar - 4 Sair 5 - AliNao 6 - Randomize 7 - QuantAbsoluta\n")
@@ -170,7 +219,9 @@ while True:
         word_list = sorted(word_list, key=valorPalavra)
         listaOriginal = sorted(listaOriginal, key=valorPalavra)
         print(f"Palavras possiveis: {word_list}")
-        print(melhorChute())
+        printInfos()
+        #print(f"Chute Sugerido: {melhorChute()}")
+        chuteQuatro()
     if escolha == "5":
         index = int(input("Digite o index\n"))
         letra = input("Digite a letra\n")
@@ -187,8 +238,12 @@ while True:
         quantAbsoluta.add(letra)
     if escolha == "8":
         parseLinha(input("Digite a linha:\n"))
-
-#unit
+    if escolha == "9":
+        valorLetras.clear()
+        dicionarioRepeticaoQuatro()
+        listaOriginal = sorted(listaOriginal, key=valorPalavra)
+        if listaOriginal:
+            print(listaOriginal[0])
 
 # Mais um caso possivel eh quando tu tem certeza que aquela letra eh aquilo e pronto ai substituiria o or letraCorreta[letra] == 0 por um certeza, deixando ainda mais especifico
 
@@ -217,3 +272,34 @@ while True:
 #
 # Depois que integrar com site da pra testar varias, mas atualmente oque acredito que faz mais sentido eh, dar 3 chutes que nao repetem letras, mas esses chutes vem da palavra com
 # maior repeticao de letras, mas baseado nas descobertas, assim a chance aumenta ainda mais de cortar casos corretos
+#
+# Talvez seja necessario penser melhor quando ele vai usar o chute ou não, talvez algo de quando chegar a um numero pequeno de opcoes ele muda a maneira
+# Da pra fazer algo relacionado com similaridade de palavras, pra escolher a palavra que tem mais coisas comuns com as outras
+#
+# Alem disso pensar na estrategia pra ele automatizar
+# - Comecar chutando 3
+# - Caso tenha um chute igual a quantidade de tentativas possiveis so colocar todos e azar
+# - Outro eh caso chegue em um numero x de palavras possiveis ja muda um pouco a maneira de pegar o chute (Talvez possa ser quando chega a 4 ou 3, talvez so 4)
+# - Caso em algum dos 3 chutes basicos ele fique sem um melhor chute, ele vai pegar o primeiro da word_list, afinal ele tem a maior soma de letras comuns
+#
+# - Acho que o método atual ta bem valido, ta funcionando bem num geral, provavel que nao preciso mudar
+# - Na minha visao o principal problema eh quando pega 4 letras iguais e tem só uma diferenca
+#	- Pra esse caso da pra mudar o dicionario de valor de letras, e colocar so aquelas que se destacam do resto e tentar achar uma palavra que exclua o maximo dessas letras possivel
+# - Por enquanto a ideia vai ser fazer isso tudo incialmente, mas caso chegue em 4 letras descobertas fazer essa ideia de ver as letras que se destacam e procurar palavras pra excluir
+# - Talvez no futuro algo pra 3 letras, mas a principio n me parece necessario
+# - De fato analisando a estrategia eh bem efetiva ate chegar 4 letras descobertas, depois so fica ruim, fazer sorte especial
+# - Ultima decisao que falta tomar acredito que seja no caso de, nao achou as 4 letras, mas mesmo assim nao tem um chute recomendado, eu pego o primeiro do word_list (letras mais comuns) ou ja vou pro chute de 4
+# 	acho que a opcao do quatro deve ser melhor, afinal caso chegue em um None, significa que em muitas letras repetidas já 3 x 2
+# - Por fim acho que a partir de sei la, umas 10 palavras sobrando nao se usa mais o chute sugerido, caso chegue no 3 caso e esteja com muito poucas usar o chute 4
+# 	da pra fazer algo se o chutePrincipal for diferente do chute 4 usar o chute 4
+
+# - Os atuais dois embates sao, caso o chuteMain seja diferente do chute 4, devo usar o chute 4? Caso o chute principal seja None, uso o primeiro do word_list ou o chute 4?
+# 	talvez ate por uma solucao mais simples eu coloque o chute 4, mas vou continuar analisando, por enquanto bem parecido
+#
+# - Caso eu queira testar depois eu troco as politicas e teste, mas por enquanto caso o chute 4 seja diferente do chute principal, uso o chute 4
+# 	- Caso o chute pricipal seja None, se usa o chute 4 nao o primeiro da word_list, com o primeira regra isso ja vai acontecer
+# - Motivo: talvez a primeira alteracao nao seja completamente necessaria, mas mesmo assim isso traz uma estabilidade maior pro algoritmo, pegar o primeiro da word_list eh complicado
+# - Agora parando pra pensar eu não estou usando literalmente sempre o chute 4? Time que ganha não se mexe!
+# - Todos chutes vao ser baseados no chute 4, que aparentemente eh muito copeiro real, servindo pra todos os casos bem
+# - Nao vou exluir nada, so comentar, vai que serve depois
+# - Unica coisa que falta nesse metodo eh caso a porra da palavra nao existir ele excluir ela e depois procurar a proxima e colocar na lista de descarte, vou colocar isso na funcao 9
