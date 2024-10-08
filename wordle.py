@@ -1,5 +1,4 @@
 import os
-import unicodedata
 import nltk
 #nltk.download('words')
 from nltk.corpus import words
@@ -19,7 +18,7 @@ for word in open("adicao.txt"):
 
 listaOriginal = word_list.copy()
 
-os.system("cls")
+os.system("clear")
 
 valorLetras = dict()
 # Quantidade de repeticao de letras
@@ -61,7 +60,7 @@ def melhorChute():
                 melhorPalavra = False
                 break
         if melhorPalavra:
-            return palavra
+            return palavra    
 
 word_list.sort()
 word_list = sorted(word_list, key=valorPalavra)
@@ -83,6 +82,29 @@ firstGuess = "arose"
 
 # Lista de possíveis palavras
 possiveisPalavras = []
+
+# - (#) Nao tem
+# - ($) Posicao errada
+# - (@) Posicao certa
+
+# Depois pensar em uma maneira mais bonita de fazer isso
+def parseLinha(linha):
+	quantLetra = dict()
+	for i in range(0, len(linha), 2):
+		if linha[i] == "$":
+			if linha[i+1] not in quantLetra:
+				quantLetra[linha[i+1]] = 0
+			quantLetra[linha[i+1]] += 1
+   
+			if (i+1)//2 not in aliNao:
+				aliNao[(i+1)//2] = []
+			aliNao[(i+1)//2].append(linha[i+1])
+   
+		if linha[i] == "@":
+			posicaoCorreta[linha[i+1]] = (i+1)//2
+			if linha[i+1] not in quantLetra:
+				quantLetra[linha[i+1]] = 0
+			quantLetra[linha[i+1]] += 1	
 
 def checarPalavra(palavra):
     for index in posicaoCorreta:
@@ -163,6 +185,8 @@ while True:
     if escolha == "7":
         letra = input("Digite a letra\n")
         quantAbsoluta.add(letra)
+    if escolha == "8":
+        parseLinha(input("Digite a linha:\n"))
 
 #unit
 
