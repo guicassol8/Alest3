@@ -93,6 +93,29 @@ def dicionarioRepeticaoQuatro():
                 valorLetras[letter] = 0
             if letter not in letraCorreta and letter not in posicaoCorreta.values():
             	valorLetras[letter] += 1
+indexAtual = 0
+def palavraIncorreta(palavra):
+	global indexAtual
+	palavrasIncorretas.append(palavra)
+	indexAtual += 1	
+
+def resetAll():
+	global word_list, listaOriginal, posicaoCorreta, letraCorreta, aliNao, quantAbsoluta, palavrasIncorretas, possiveisPalavras, valorLetras, indexAtual
+	with open("descarte.txt", "a") as file:
+		for palavra in palavrasIncorretas:
+			file.write("\n" + palavra)
+	palavrasIncorretas.clear()
+	word_list = listaOriginal
+	valorLetras.clear()
+	word_list.sort()
+	word_list = sorted(word_list, key=valorPalavra)
+	posicaoCorreta.clear()
+	letraCorreta.clear()
+	aliNao.clear()
+	quantAbsoluta.clear()
+	possiveisPalavras.clear()
+	indexAtual = 0
+
 
 # - (#) Nao tem
 # - ($) Posicao errada
@@ -192,32 +215,12 @@ def printInfos():
 		print(f"Letra: {letra}")
           
 def chuteQuatro():
-    global listaOriginal
+    global listaOriginal,indexAtual
     valorLetras.clear()
     dicionarioRepeticaoQuatro()
     listaOriginal = sorted(listaOriginal, key=valorPalavra)
     if listaOriginal:
-        print(f"Chute Quatro: {listaOriginal[0]}")
-
-def palavraIncorreta(palavra):
-	global palavrasIncorretas
-	palavrasIncorretas.append(palavra)	
-
-def resetAll():
-	global word_list, listaOriginal, posicaoCorreta, letraCorreta, aliNao, quantAbsoluta, palavrasIncorretas, possiveisPalavras, valorLetras
-	with open("descarte.txt", "a") as file:
-		for palavra in palavrasIncorretas:
-			file.write("\n" + palavra)
-	palavrasIncorretas.clear()
-	word_list = listaOriginal
-	valorLetras.clear()
-	word_list.sort()
-	word_list = sorted(word_list, key=valorPalavra)
-	posicaoCorreta.clear()
-	letraCorreta.clear()
-	aliNao.clear()
-	quantAbsoluta.clear()
-	possiveisPalavras.clear()
+        print(f"Chute Quatro: {listaOriginal[indexAtual]}")
 
 while True:
     escolha = input("1 - AddPosCorreta 2 - AddLetraCorreta 3 - Testar - 4 Sair 5 - AliNao 6 - Randomize 7 - QuantAbsoluta\n")
